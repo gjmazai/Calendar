@@ -1,9 +1,18 @@
 import { Button, Checkbox, Form, Input } from "antd";
 import React, { FC } from "react";
+import { useState } from "react";
+import { useAppDispatch } from "../hooks/usetypedDispatch";
+import { useTypedSelector } from "../hooks/useTypedSelector";
+import { AuthActionCreator } from "../store/reducer/auth/action-creator";
 
 const LoginForm: FC = () => {
+	const dispatch = useAppDispatch();
+	const { error, isLoading } = useTypedSelector((state) => state.authReducer);
+	const [username, setUsername] = useState("");
+	const [password, setPassword] = useState("");
+
 	const onFinish = (values: any) => {
-		console.log("Success:", values);
+		dispatch(AuthActionCreator.login(username, password));
 	};
 
 	const onFinishFailed = (errorInfo: any) => {
@@ -25,7 +34,10 @@ const LoginForm: FC = () => {
 				name="username"
 				rules={[{ required: true, message: "Please input your username!" }]}
 			>
-				<Input />
+				<Input
+					value={username}
+					onChange={(e) => setUsername(e.target.value)}
+				/>
 			</Form.Item>
 
 			<Form.Item
@@ -33,8 +45,12 @@ const LoginForm: FC = () => {
 				name="password"
 				rules={[{ required: true, message: "Please input your password!" }]}
 			>
-				<Input.Password />
+				<Input.Password
+					value={password}
+					onChange={(e) => setPassword(e.target.value)}
+				/>
 			</Form.Item>
+			{error && <div style={{ color: "red", margin: "10px 0 " }}>{error}</div>}
 
 			<Form.Item
 				name="remember"
@@ -48,6 +64,7 @@ const LoginForm: FC = () => {
 				<Button
 					type="primary"
 					htmlType="submit"
+					loading={isLoading}
 				>
 					Submit
 				</Button>
