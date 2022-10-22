@@ -1,17 +1,22 @@
 import { Layout, Menu } from "antd";
 import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAppDispatch } from "../hooks/usetypedDispatch";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { RouteNames } from "../router";
+import { AuthActionCreator } from "../store/reducer/auth/action-creator";
 
 const NavBar: FC = () => {
+	const { isAuth, user } = useTypedSelector((state) => state.authReducer);
 	const navigate = useNavigate();
+	const dispatch = useAppDispatch();
+
 	const items = [
-		{ label: "Stas", key: 1, auth: "true", disabled: true },
+		{ label: user.username, key: 1, auth: "true", disabled: true },
 		{ label: "Login", key: 2, auth: "false" },
 		{ label: "Quit", key: 3, auth: "true" },
 	];
-	const { isAuth } = useTypedSelector((state) => state.auth);
+
 	return (
 		<Layout.Header>
 			{!isAuth ? (
@@ -21,7 +26,7 @@ const NavBar: FC = () => {
 					selectable={false}
 					items={items.filter((el) => el.auth === "false")}
 					className="Menu"
-					onClick={() => console.log("Quit")}
+					onClick={() => dispatch(AuthActionCreator.logout)}
 				/>
 			) : (
 				<Menu

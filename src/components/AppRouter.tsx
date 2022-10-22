@@ -7,7 +7,7 @@ import { privateRoutes, publicRoutes } from "../router";
 //in <Route  element={<ELEMENT/>} />
 // Navigate instead of Redirect
 const AppRouter: FC = () => {
-	const { isAuth } = useTypedSelector((state) => state.auth);
+	const { isAuth } = useTypedSelector((state) => state.authReducer);
 	return isAuth ? (
 		<Routes>
 			{privateRoutes.map((route) => (
