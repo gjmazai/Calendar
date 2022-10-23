@@ -1,21 +1,25 @@
 import { Layout, Menu } from "antd";
 import React, { FC } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAppDispatch } from "../hooks/usetypedDispatch";
+import { useActions } from "../hooks/useActions";
 import { useTypedSelector } from "../hooks/useTypedSelector";
 import { RouteNames } from "../router";
-import { AuthActionCreator } from "../store/reducer/auth/action-creator";
 
 const NavBar: FC = () => {
 	const { isAuth, user } = useTypedSelector((state) => state.authReducer);
 	const navigate = useNavigate();
-	const dispatch = useAppDispatch();
+	const { logout } = useActions();
 
 	const items = [
 		{ label: user.username, key: 1, auth: "true", disabled: true },
 		{ label: "Login", key: 2, auth: "false" },
 		{ label: "Quit", key: 3, auth: "true" },
 	];
+
+	function onClickLogout() {
+		logout();
+		navigate(RouteNames.LOGIN);
+	}
 
 	return (
 		<Layout.Header>
@@ -26,7 +30,7 @@ const NavBar: FC = () => {
 					selectable={false}
 					items={items.filter((el) => el.auth === "false")}
 					className="Menu"
-					onClick={() => dispatch(AuthActionCreator.logout)}
+					onClick={() => navigate(RouteNames.LOGIN)}
 				/>
 			) : (
 				<Menu
@@ -35,7 +39,7 @@ const NavBar: FC = () => {
 					selectable={false}
 					items={items.filter((el) => el.auth === "true")}
 					className="Menu"
-					onClick={() => navigate(RouteNames.LOGIN)}
+					onClick={() => onClickLogout()}
 				/>
 			)}
 		</Layout.Header>
