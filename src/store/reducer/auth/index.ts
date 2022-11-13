@@ -25,7 +25,6 @@ export const authSlice = createSlice({
 				state.isLoading = action.payload;
 			},
 			setUser(state, action: PayloadAction<IUser>){
-				debugger;
 				state.user = action.payload;
 			}
 	}
